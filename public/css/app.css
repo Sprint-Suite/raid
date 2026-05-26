@@ -343,6 +343,50 @@
   color: var(--accent-deep);
 }
 
+/* ---------- Conflict treatment (the hero feature) ---------- */
+
+.raid-card--conflict {
+  border: 2px solid var(--warn);
+}
+
+.raid-card__corner-chip {
+  position: absolute;
+  top: -11px;
+  right: 14px;
+  background: var(--warn);
+  color: #ffffff;
+  font: 700 10.5px/1 var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+}
+
+.raid-item__conflict-pill {
+  font: 700 10.5px/1 var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.raid-item__conflict-callout {
+  background: var(--warn-bg);
+  border-left: 3px solid var(--warn);
+  padding: var(--s-2) var(--s-3);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  font: 400 12.5px/1.5 var(--sans);
+  color: var(--ink);
+  margin-top: var(--s-2);
+}
+
+.raid-item__conflict-callout strong {
+  color: var(--warn);
+  font-weight: 700;
+}
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
