@@ -195,11 +195,38 @@
 
 .app-footer a { color: var(--accent); }
 
+/* ---------- Result zone (placeholder; expanded in Phase 4) ---------- */
+
+.result-zone {
+  margin-top: var(--s-6);
+}
+
+.loading {
+  text-align: center;
+  padding: var(--s-12) var(--s-4);
+  color: var(--muted);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto var(--s-3);
+  border: 3px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: raid-spin 1s linear infinite;
+}
+
+@keyframes raid-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
   .btn--primary:hover:not(:disabled) { transform: none; }
+  .spinner { animation: none; border-top-color: var(--accent-soft); }
 }
 
 /* ---------- Mobile ---------- */
