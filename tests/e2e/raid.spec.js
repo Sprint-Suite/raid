@@ -1,5 +1,18 @@
 const { test, expect } = require('@playwright/test');
 
+const TEST_KEY = 'E2E-Test-Key-12345';
+
+// Default: every test runs already-signed-in. Tests that exercise the
+// signed-out flow opt out by calling page.context().clearCookies().
+test.beforeEach(async ({ context }) => {
+  const res = await context.request.post('/api/login', {
+    data: { key: TEST_KEY }
+  });
+  if (res.status() !== 200) {
+    throw new Error(`Test setup login failed: ${res.status()}`);
+  }
+});
+
 // ---------- Mocked /extract responses ----------
 
 const MOCK_BASIC = {
@@ -174,4 +187,35 @@ test('11. Mobile viewport (375px) collapses grid and stacks action bar', async (
   const firstBtn = page.locator('.action-bar .btn').first();
   const btnWidth = await firstBtn.evaluate((el) => el.getBoundingClientRect().width);
   expect(btnWidth).toBeGreaterThan(300);
+});
+
+// ---------- Scenarios 12-14: auth flow ----------
+
+test('12. Unauthenticated GET / redirects to /login.html', async ({ page, context }) => {
+  await context.clearCookies();
+  const response = await page.goto('/');
+  // Playwright follows the redirect; final URL should be the login page
+  expect(page.url()).toMatch(/\/login\.html$/);
+  expect(response.status()).toBe(200);
+  await expect(page.locator('#login-form')).toBeVisible();
+});
+
+test('13. POST /api/login with wrong key shows error on page', async ({ page, context }) => {
+  await context.clearCookies();
+  await page.goto('/login.html');
+  await page.fill('#key-input', 'wrong-key-attempt-here');
+  await page.click('#login-submit');
+  await expect(page.locator('#login-error')).toBeVisible();
+  await expect(page.locator('#login-error')).toContainText('Invalid key');
+});
+
+test('14. Logout button clears session and redirects to /login.html', async ({ page }) => {
+  await page.goto('/');
+  // Confirm we're on the main app (logged in via beforeEach)
+  await expect(page.locator('#generate-button')).toBeVisible();
+
+  await page.click('#logout-button');
+  // After logout we expect to land on /login.html
+  await page.waitForURL(/\/login\.html$/);
+  await expect(page.locator('#login-form')).toBeVisible();
 });
