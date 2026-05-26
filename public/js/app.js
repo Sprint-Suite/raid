@@ -127,25 +127,30 @@
   }
 
   function renderDependencyItem(d) {
-    // Phase 5 adds the conflict pill + callout. For now just the title/owner/depends_on.
+    const conflict = d.conflict_flag === true;
     return `
       <div class="raid-item">
         <h3 class="raid-item__title">${escapeHtml(d.title)}</h3>
         <div class="raid-item__meta">
           <span class="raid-item__owner">${escapeHtml(d.owner)}</span>
+          ${conflict ? `<span class="raid-item__conflict-pill">Conflict</span>` : ''}
         </div>
         <p class="raid-item__body"><span class="raid-item__label">Depends on:</span> ${escapeHtml(d.depends_on)}</p>
+        ${conflict ? `<div class="raid-item__conflict-callout"><strong>⚠</strong> ${escapeHtml(d.conflict_note)}</div>` : ''}
       </div>`;
   }
 
   // ---------- Card renderer ----------
-  function renderCard({ key, label, items, renderItem, sort }) {
+  function renderCard({ key, label, items, renderItem, sort, hasConflict }) {
     const sorted = sort ? [...items].sort(sort) : items;
     const body = sorted.length === 0
       ? `<p class="raid-card__empty">No items detected.</p>`
       : sorted.map(renderItem).join('');
+    const conflictClass = hasConflict ? ' raid-card--conflict' : '';
+    const cornerChip = hasConflict ? `<span class="raid-card__corner-chip">⚠ Conflict</span>` : '';
     return `
-      <article class="raid-card" data-category="${key}">
+      <article class="raid-card${conflictClass}" data-category="${key}">
+        ${cornerChip}
         <header class="raid-card__header">
           <span class="raid-card__pill raid-card__pill--${key}">${label}</span>
           <span class="raid-card__count">${items.length}</span>
@@ -183,7 +188,9 @@
         key: 'dependencies',
         label: 'Dependencies',
         items: raid.dependencies || [],
-        renderItem: renderDependencyItem
+        renderItem: renderDependencyItem,
+        sort: (a, b) => (b.conflict_flag === true) - (a.conflict_flag === true),
+        hasConflict: (raid.dependencies || []).some((d) => d.conflict_flag === true)
       })
     ];
     return `<div class="result-grid">${cards.join('')}</div>`;
