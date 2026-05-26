@@ -195,6 +195,12 @@
 
 .app-footer a { color: var(--accent); }
 
+.app-footer a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  border-radius: var(--r-sm);
+}
+
 /* ---------- Result zone (placeholder; expanded in Phase 4) ---------- */
 
 .result-zone {
