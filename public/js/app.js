@@ -331,14 +331,34 @@
   }
 
   // ---------- Event handlers ----------
+  let heartbeatTimer = null;
+
+  function clearHeartbeat() {
+    if (heartbeatTimer) {
+      clearTimeout(heartbeatTimer);
+      heartbeatTimer = null;
+    }
+  }
+
+  function startHeartbeat() {
+    clearHeartbeat();
+    heartbeatTimer = setTimeout(() => {
+      if (state.phase !== 'loading') return;
+      const loadingEl = dom.resultZone.querySelector('.loading p');
+      if (loadingEl) loadingEl.innerHTML = 'Analysing your notes…<br><small>This is taking a bit longer than usual…</small>';
+    }, 20_000);
+  }
+
   async function onGenerate() {
     const v = validate(dom.textarea.value);
     if (!v.ok) return;
     state.phase = 'loading';
     state.error = null;
     render();
+    startHeartbeat();
 
     const result = await callExtract(dom.textarea.value);
+    clearHeartbeat();
     if (result.ok) {
       state.phase = 'result';
       state.result = result.data;
