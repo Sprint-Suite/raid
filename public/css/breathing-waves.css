@@ -8,7 +8,9 @@
   position: relative;
   background: var(--bg);
   overflow: hidden;
-  min-height: clamp(120px, 22vw, 180px);
+  /* Waves draw at h/2 ± 62px peak. Floor 180px keeps the bottom line from
+     being clipped on narrow viewports where 22vw is shorter. */
+  min-height: clamp(180px, 22vw, 220px);
   isolation: isolate;
 }
 

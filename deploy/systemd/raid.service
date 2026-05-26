@@ -1,0 +1,29 @@
+[Unit]
+Description=RAID — AI-powered RAID log extraction
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/raid
+EnvironmentFile=/var/www/raid/.env
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+
+# Run as a dedicated, unprivileged user. Create it once with:
+#   sudo useradd --system --no-create-home --shell /usr/sbin/nologin raid
+#   sudo chown -R raid:raid /var/www/raid
+User=raid
+Group=raid
+
+# Hardening.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+# keys.json is written next to server.js when a new key is generated; the
+# app writes nowhere else, so the project dir is the only writable path.
+ReadWritePaths=/var/www/raid
+
+[Install]
+WantedBy=multi-user.target
