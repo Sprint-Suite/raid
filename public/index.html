@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAID — From scattered notes to a scored RAID log</title>
+  <meta name="description" content="Turn project notes into a scored, classified RAID log: Risks, Assumptions, Issues, Dependencies — with dependency conflict detection.">
+
+  <link rel="stylesheet" href="/css/theme-core.css">
+  <link rel="stylesheet" href="/css/theme-raid.css">
+  <link rel="stylesheet" href="/css/app.css">
+
+  <script src="/js/clipboard.js" defer></script>
+  <script src="/js/samples.js" defer></script>
+  <script src="/js/exports.js" defer></script>
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+
+  <main class="app-page">
+
+    <header class="hero">
+      <svg class="hero__glyph" aria-hidden="true"><use href="/illos/theme-illos.svg#sticker-circle"/></svg>
+      <span class="hero__kicker">RAID extraction</span>
+      <h1 class="hero__title">RAID</h1>
+      <p class="hero__tagline">From scattered notes to a scored RAID log, in seconds.</p>
+    </header>
+
+    <section class="input-card" aria-labelledby="input-heading">
+      <h2 id="input-heading" class="visually-hidden">Project notes</h2>
+
+      <div class="privacy-chip" role="note">
+        <svg class="privacy-chip__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 11V8a7 7 0 0 1 14 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/>
+        </svg>
+        <span>Notes are sent to a cloud LLM and not stored.</span>
+      </div>
+
+      <label class="visually-hidden" for="notes-textarea">Project notes</label>
+      <textarea id="notes-textarea" class="input-card__textarea" autocomplete="off" spellcheck="true" aria-describedby="notes-helper notes-counter"></textarea>
+
+      <div id="notes-counter" class="input-card__counter">0 chars</div>
+      <div id="notes-helper" class="input-card__helper input-card__helper--hidden" aria-live="polite"></div>
+
+      <div class="input-card__actions">
+        <button id="generate-button" class="btn btn--primary" type="button" disabled>Generate RAID</button>
+      </div>
+    </section>
+
+    <section id="result-zone" class="result-zone" aria-live="polite" aria-atomic="false" hidden>
+      <!-- Populated by app.js with the spinner, grid, action bar, or error card -->
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Part of the suite: <a href="https://sprintpoker.uk">sprintpoker</a> · <a href="https://sprintretro.uk">sprintretro</a> · <a href="https://signal.uk">signal</a></p>
+    <p><small>Built with Claude. <a href="/license.html">License</a></small></p>
+  </footer>
+
+  <style>
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+
+</body>
+</html>
