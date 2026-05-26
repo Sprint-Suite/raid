@@ -215,8 +215,13 @@
   }
 
   function onTryAnother() {
-    // Wired in Phase 7. Placeholder for now.
-    console.log('Try another — Phase 7');
+    const samples = window.RAID_SAMPLES || [];
+    if (samples.length === 0) return;
+    state.currentSample = (state.currentSample + 1) % samples.length;
+    dom.textarea.value = samples[state.currentSample].text;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    render();
+    onGenerate();
   }
 
   function wireActionBar() {
