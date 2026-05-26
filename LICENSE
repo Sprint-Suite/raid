@@ -39,15 +39,16 @@ arising out of or related to use of, inability to use, or reliance on the
 software.
 
 Without limiting the above, David Jackson is not liable for:
-- sprint failure, delivery failure, missed deadlines, cost overruns, or any
-  project outcome;
-- incorrect estimation, planning, backlog management, team performance, or
-  implementation of Scrum or Agile practices;
+- delivery failure, missed deadlines, cost overruns, or any project outcome;
+- incorrect classification, prioritisation, or interpretation of RAID items,
+  or any decision or action taken based on the extracted log;
+- inaccuracies, omissions, or hallucinations in AI-generated content;
 - any business, operational, or technical decision made by users of the
   software.
 
 By using the software, you acknowledge that responsibility for use of the
-software and implementation of Scrum practices lies solely with the user.
+software and any decisions arising from the extracted RAID log lies solely
+with the user.
 
 6. Termination
 This license terminates automatically if you breach any term. On termination,
