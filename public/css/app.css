@@ -387,6 +387,24 @@
   font-weight: 700;
 }
 
+/* ---------- Action bar ---------- */
+
+.action-bar {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  margin-top: var(--s-6);
+}
+
+@media (max-width: 640px) {
+  .action-bar {
+    flex-direction: column;
+  }
+  .action-bar .btn {
+    width: 100%;
+  }
+}
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {

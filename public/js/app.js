@@ -159,6 +159,73 @@
       </article>`;
   }
 
+  function renderActionBar() {
+    return `
+      <div class="action-bar">
+        <button id="copy-md-button" class="btn btn--primary" type="button">Copy as Markdown</button>
+        <button id="dl-csv-button" class="btn btn--secondary" type="button">Download CSV</button>
+        <button id="dl-jira-button" class="btn btn--secondary" type="button">Download for Jira</button>
+        <button id="try-another-button" class="btn btn--ghost" type="button">Try another sample</button>
+      </div>`;
+  }
+
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function downloadBlob(filename, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  async function onCopyMarkdown() {
+    const btn = $('#copy-md-button');
+    const md = window.RaidExports.toMarkdown(state.result);
+    try {
+      await window.RaidClipboard.copyText(md);
+      const original = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.disabled = false;
+      }, 1500);
+    } catch (_err) {
+      btn.textContent = 'Copy failed';
+      setTimeout(() => { btn.textContent = 'Copy as Markdown'; }, 1500);
+    }
+  }
+
+  function onDownloadCSV() {
+    const csv = window.RaidExports.toCSV(state.result);
+    downloadBlob(`raid-log-${todayStr()}.csv`, csv, 'text/csv;charset=utf-8');
+  }
+
+  function onDownloadJira() {
+    const csv = window.RaidExports.toJiraCSV(state.result);
+    downloadBlob(`raid-jira-${todayStr()}.csv`, csv, 'text/csv;charset=utf-8');
+  }
+
+  function onTryAnother() {
+    // Wired in Phase 7. Placeholder for now.
+    console.log('Try another — Phase 7');
+  }
+
+  function wireActionBar() {
+    $('#copy-md-button')?.addEventListener('click', onCopyMarkdown);
+    $('#dl-csv-button')?.addEventListener('click', onDownloadCSV);
+    $('#dl-jira-button')?.addEventListener('click', onDownloadJira);
+    $('#try-another-button')?.addEventListener('click', onTryAnother);
+  }
+
   function renderGrid(raid) {
     const cards = [
       renderCard({
@@ -211,7 +278,8 @@
           <p>Analysing your notes…</p>
         </div>`;
     } else if (state.phase === 'result') {
-      dom.resultZone.innerHTML = renderGrid(state.result);
+      dom.resultZone.innerHTML = renderGrid(state.result) + renderActionBar();
+      wireActionBar();
     } else if (state.phase === 'error') {
       // Phase 7 replaces this with the proper error-card
       dom.resultZone.innerHTML = `<div class="error">${escapeHtml(state.error)}</div>`;
