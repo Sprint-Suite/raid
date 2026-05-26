@@ -20,26 +20,44 @@ sudo useradd --system --no-create-home --shell /usr/sbin/nologin raid
 
 ## 2. Clone the repo and install
 
+The repo may be private. Clone as your user (not root) so `gh` / SSH credentials are available:
+
 ```bash
-sudo mkdir -p /var/www
-sudo git clone https://github.com/davidmjackson/raid.git /var/www/raid
+# As yourself, NOT sudo — sudo runs as root and root has no gh/SSH auth.
+cd ~
+gh repo clone davidmjackson/raid          # uses your gh auth
+# OR if you use SSH:
+# git clone git@github.com:davidmjackson/raid.git
+
+sudo mv ~/raid /var/www/raid
+sudo chown -R $USER:raid /var/www/raid    # you own files, raid is the group
+sudo chmod -R g+rX /var/www/raid          # group can read + enter dirs
+
 cd /var/www/raid
 sudo npm install --omit=dev
-sudo chown -R raid:raid /var/www/raid
 ```
+
+If the repo is public, `sudo git clone https://...` works too — but the
+`gh` / SSH path is also fine for public repos and avoids needing two patterns.
 
 ## 3. Create the `.env` file
 
 ```bash
-sudo -u raid tee /var/www/raid/.env <<'EOF'
+# Owned by you (so you can edit), readable by raid, nobody else.
+sudo touch /var/www/raid/.env
+sudo chown $USER:raid /var/www/raid/.env
+sudo chmod 640 /var/www/raid/.env
+sudo tee -a /var/www/raid/.env <<'EOF'
 ANTHROPIC_API_KEY=sk-ant-...your-real-key...
 NODE_ENV=production
 PORT=3003
 EOF
-sudo chmod 600 /var/www/raid/.env
 ```
 
 ## 4. Generate the first access key
+
+Run as the `raid` user so `keys.json` is owned by `raid:raid` (only the
+service ever writes to it; you never need to edit it by hand).
 
 ```bash
 sudo -u raid node /var/www/raid/manageKeys.js generate <your-name>
@@ -104,10 +122,13 @@ Visit `https://sprintraid.uk/`:
 
 ## Subsequent deploys
 
+Permission model: you own the code, the `raid` system user only reads it.
+That means deploys are plain `git pull` under your own login.
+
 ```bash
 cd /var/www/raid
-sudo -u raid git pull
-sudo -u raid npm install --omit=dev      # only if package.json changed
+git pull                                 # your gh-authenticated git, no sudo
+sudo npm install --omit=dev              # only if package.json changed
 sudo systemctl restart raid
 ```
 
@@ -121,3 +142,5 @@ In-memory sessions reset on restart, so everyone signs in again after a deploy. 
 - 502 from Apache → check the Node service is up on `127.0.0.1:3003`.
 - "Invalid key" but you're sure the key is correct → confirm `keys.json` is owned by `raid` and the systemd service has write access (`ReadWritePaths=/var/www/raid`).
 - After a deploy, no one can sign in → the user that ran `manageKeys.js generate` wasn't the `raid` system user; the keys file may be owned wrong. Run `sudo chown raid:raid /var/www/raid/keys.json`.
+- `git pull` says "Permission denied" → the working tree is owned by `raid`, not by you. Fix once with `sudo chown -R $USER:raid /var/www/raid && sudo chmod -R g+rX /var/www/raid`.
+- `git clone` prompts for username/password → the repo is private and you ran with `sudo`. Use `gh repo clone davidmjackson/raid` (or SSH URL) as **yourself**, then `sudo mv` it into place.
