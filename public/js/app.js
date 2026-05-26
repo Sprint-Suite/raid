@@ -224,6 +224,25 @@
     onGenerate();
   }
 
+  function renderErrorCard() {
+    return `
+      <div class="error-card" role="alert">
+        <svg class="error-card__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p class="error-card__message">${escapeHtml(state.error)}</p>
+        <div class="error-card__actions">
+          <button id="try-again-button" class="btn btn--primary" type="button">Try again</button>
+        </div>
+      </div>`;
+  }
+
+  function onTryAgain() {
+    onGenerate();
+  }
+
   function wireActionBar() {
     $('#copy-md-button')?.addEventListener('click', onCopyMarkdown);
     $('#dl-csv-button')?.addEventListener('click', onDownloadCSV);
@@ -286,8 +305,8 @@
       dom.resultZone.innerHTML = renderGrid(state.result) + renderActionBar();
       wireActionBar();
     } else if (state.phase === 'error') {
-      // Phase 7 replaces this with the proper error-card
-      dom.resultZone.innerHTML = `<div class="error">${escapeHtml(state.error)}</div>`;
+      dom.resultZone.innerHTML = renderErrorCard();
+      $('#try-again-button')?.addEventListener('click', onTryAgain);
     }
   }
 

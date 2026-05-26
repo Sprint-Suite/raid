@@ -405,6 +405,34 @@
   }
 }
 
+/* ---------- Error card ---------- */
+
+.error-card {
+  background: var(--err-bg);
+  border: 1px solid var(--err);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  text-align: center;
+}
+
+.error-card__icon {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto var(--s-3);
+  color: var(--err);
+}
+
+.error-card__message {
+  font: 400 14.5px/1.5 var(--sans);
+  color: var(--err);
+  margin: 0 0 var(--s-4);
+}
+
+.error-card__actions {
+  display: flex;
+  justify-content: center;
+}
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
