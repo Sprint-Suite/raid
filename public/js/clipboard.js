@@ -18,5 +18,5 @@
         document.body.removeChild(textarea);
     }
 
-    window.ScrumPokerClipboard = { copyText };
+    window.RaidClipboard = { copyText };
 })(window);
