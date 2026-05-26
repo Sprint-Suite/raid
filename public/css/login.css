@@ -1,0 +1,100 @@
+/* public/css/login.css
+ *
+ * Standalone styles for the sign-in page. Loaded alongside theme-core.css,
+ * theme-raid.css, app.css. The login page does NOT use .app-page.
+ */
+
+.login-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.login-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-8) var(--s-6);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-md);
+  padding: var(--s-8) var(--s-6);
+  text-align: center;
+}
+
+.login-card__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+
+.login-card__brand .hero__glyph {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+}
+
+.login-card__title {
+  font: 600 26px/1.1 var(--serif);
+  color: var(--ink);
+  margin: 0 0 var(--s-2);
+}
+
+.login-card__tagline {
+  font: 400 14px/1.5 var(--sans);
+  color: var(--muted);
+  margin: 0 0 var(--s-6);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.login-input {
+  width: 100%;
+  font: 500 15px/1 var(--mono);
+  color: var(--ink);
+  background: var(--bg-warm);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  letter-spacing: 0.04em;
+  box-sizing: border-box;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.login-input::placeholder {
+  color: var(--faint);
+  letter-spacing: 0;
+  font-family: var(--sans);
+}
+
+.login-error {
+  font: 400 13px/1.4 var(--sans);
+  color: var(--err);
+  margin: 0;
+  min-height: 1.4em;
+}
+
+@media (max-width: 640px) {
+  .login-card {
+    padding: var(--s-6) var(--s-4);
+  }
+}

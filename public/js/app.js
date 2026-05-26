@@ -322,6 +322,11 @@
     } catch (_networkErr) {
       return { ok: false, error: "Couldn't reach the server. Check your connection and try again." };
     }
+    if (res.status === 401) {
+      // Session expired or lost — back to the login page.
+      window.location.href = '/login.html';
+      return { ok: false, error: 'Signed out — redirecting.' };
+    }
     if (res.status === 502) return { ok: false, error: 'Extraction failed. Try rephrasing or shortening your notes.' };
     if (res.status === 400) return { ok: false, error: 'The AI service rejected the request. This is likely a temporary configuration issue. Please try again.' };
     if (res.status === 429) return { ok: false, error: 'Too many requests. Please wait a moment and try again.' };
@@ -373,6 +378,16 @@
     render();
   }
 
+  async function onLogout() {
+    try {
+      await fetch('/api/logout', { method: 'POST' });
+    } catch (_err) {
+      // Best-effort; the cookie will be cleared by the server response when it succeeds.
+      // If the network failed, we still redirect — local session is effectively gone.
+    }
+    window.location.href = '/login.html';
+  }
+
   // ---------- Init ----------
   function init() {
     dom.textarea   = $('#notes-textarea');
@@ -389,6 +404,9 @@
 
     dom.textarea.addEventListener('input', onTextareaInput);
     dom.generate.addEventListener('click', onGenerate);
+
+    const logoutBtn = $('#logout-button');
+    if (logoutBtn) logoutBtn.addEventListener('click', onLogout);
 
     render();
   }
