@@ -69,8 +69,128 @@
     renderResultZone();
   }
 
+  // ---------- Helpers ----------
+  function escapeHtml(s) {
+    return String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function ragClass(rag) {
+    return `raid-item__rag--${String(rag).toLowerCase()}`;
+  }
+
+  function sevLabelClass(sev) {
+    return `raid-item__sev-label--${String(sev).toLowerCase()}`;
+  }
+
+  // ---------- Per-category renderers ----------
+  function renderRiskItem(r) {
+    return `
+      <div class="raid-item">
+        <h3 class="raid-item__title">${escapeHtml(r.title)}</h3>
+        <div class="raid-item__meta">
+          <span class="raid-item__owner">${escapeHtml(r.owner)}</span>
+          <span class="raid-item__score">P${r.probability} · I${r.impact} · Sev ${r.severity}</span>
+          <span class="raid-item__rag ${ragClass(r.rag)}">${escapeHtml(r.rag)}</span>
+        </div>
+        <p class="raid-item__body"><span class="raid-item__label">Mitigation:</span> ${escapeHtml(r.mitigation)}</p>
+      </div>`;
+  }
+
+  function renderAssumptionItem(a) {
+    return `
+      <div class="raid-item">
+        <h3 class="raid-item__title">${escapeHtml(a.title)}</h3>
+        <div class="raid-item__meta">
+          <span class="raid-item__owner">${escapeHtml(a.owner)}</span>
+        </div>
+        <p class="raid-item__body">${escapeHtml(a.description)}</p>
+        <p class="raid-item__body"><span class="raid-item__label">Validate by:</span> ${escapeHtml(a.validation_needed)}</p>
+      </div>`;
+  }
+
+  function renderIssueItem(i) {
+    return `
+      <div class="raid-item">
+        <h3 class="raid-item__title">${escapeHtml(i.title)}</h3>
+        <div class="raid-item__meta">
+          <span class="raid-item__owner">${escapeHtml(i.owner)}</span>
+          <span class="raid-item__rag ${sevLabelClass(i.severity)}">${escapeHtml(i.severity)}</span>
+        </div>
+        <p class="raid-item__body">${escapeHtml(i.description)}</p>
+        <p class="raid-item__body"><span class="raid-item__label">Action:</span> ${escapeHtml(i.suggested_action)}</p>
+      </div>`;
+  }
+
+  function renderDependencyItem(d) {
+    // Phase 5 adds the conflict pill + callout. For now just the title/owner/depends_on.
+    return `
+      <div class="raid-item">
+        <h3 class="raid-item__title">${escapeHtml(d.title)}</h3>
+        <div class="raid-item__meta">
+          <span class="raid-item__owner">${escapeHtml(d.owner)}</span>
+        </div>
+        <p class="raid-item__body"><span class="raid-item__label">Depends on:</span> ${escapeHtml(d.depends_on)}</p>
+      </div>`;
+  }
+
+  // ---------- Card renderer ----------
+  function renderCard({ key, label, items, renderItem, sort }) {
+    const sorted = sort ? [...items].sort(sort) : items;
+    const body = sorted.length === 0
+      ? `<p class="raid-card__empty">No items detected.</p>`
+      : sorted.map(renderItem).join('');
+    return `
+      <article class="raid-card" data-category="${key}">
+        <header class="raid-card__header">
+          <span class="raid-card__pill raid-card__pill--${key}">${label}</span>
+          <span class="raid-card__count">${items.length}</span>
+        </header>
+        ${body}
+      </article>`;
+  }
+
+  function renderGrid(raid) {
+    const cards = [
+      renderCard({
+        key: 'risks',
+        label: 'Risks',
+        items: raid.risks || [],
+        renderItem: renderRiskItem,
+        sort: (a, b) => b.severity - a.severity
+      }),
+      renderCard({
+        key: 'assumptions',
+        label: 'Assumptions',
+        items: raid.assumptions || [],
+        renderItem: renderAssumptionItem
+      }),
+      renderCard({
+        key: 'issues',
+        label: 'Issues',
+        items: raid.issues || [],
+        renderItem: renderIssueItem,
+        sort: (a, b) => {
+          const order = { High: 0, Medium: 1, Low: 2 };
+          return order[a.severity] - order[b.severity];
+        }
+      }),
+      renderCard({
+        key: 'dependencies',
+        label: 'Dependencies',
+        items: raid.dependencies || [],
+        renderItem: renderDependencyItem
+      })
+    ];
+    return `<div class="result-grid">${cards.join('')}</div>`;
+  }
+
+  // ---------- Result zone ----------
   function renderResultZone() {
-    // Placeholder: real rendering in Phase 4. Here, just expose the phase.
     if (state.phase === 'idle') {
       dom.resultZone.hidden = true;
       dom.resultZone.innerHTML = '';
@@ -84,10 +204,10 @@
           <p>Analysing your notes…</p>
         </div>`;
     } else if (state.phase === 'result') {
-      // Phase 4 replaces this with the 2x2 grid
-      dom.resultZone.innerHTML = `<pre>${JSON.stringify(state.result, null, 2)}</pre>`;
+      dom.resultZone.innerHTML = renderGrid(state.result);
     } else if (state.phase === 'error') {
-      dom.resultZone.innerHTML = `<div class="error">${state.error}</div>`;
+      // Phase 7 replaces this with the proper error-card
+      dom.resultZone.innerHTML = `<div class="error">${escapeHtml(state.error)}</div>`;
     }
   }
 
