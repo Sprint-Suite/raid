@@ -35,7 +35,7 @@
       ...options,
       headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
     });
-    if (res.status === 401 || res.status === 404) {
+    if (res.status === 401) {
       window.location.href = '/login.html';
       throw new Error(`auth lost (${res.status})`);
     }
@@ -124,6 +124,10 @@
     const body = { name };
     if (daysRaw) body.expiresInDays = Number(daysRaw);
 
+    const submit = $('admin-add-submit');
+    submit.disabled = true;
+    const prevLabel = submit.textContent;
+    submit.textContent = 'Generating…';
     try {
       const { value, name: createdName } = await request('/api/admin/users', {
         method: 'POST',
@@ -136,6 +140,9 @@
       await loadUsers();
     } catch (err) {
       setStatus(err.message, 'error');
+    } finally {
+      submit.disabled = false;
+      submit.textContent = prevLabel;
     }
   }
 
@@ -155,6 +162,7 @@
     if (!window.confirm(`Delete user "${name}"? This signs them out immediately and removes their key.`)) return;
     try {
       await request(`/api/admin/users/${encodeURIComponent(name)}`, { method: 'DELETE' });
+      hideBanner();
       setStatus(`Deleted "${name}".`);
       await loadUsers();
     } catch (err) {

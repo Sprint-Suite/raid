@@ -26,11 +26,11 @@
 
   <main class="admin-main">
 
-    <section id="admin-banner" class="admin-banner" hidden>
+    <section id="admin-banner" class="admin-banner" role="alert" hidden>
       <h2 class="admin-banner__title">New key for <span id="admin-banner-name"></span></h2>
       <p class="admin-banner__hint">Copy this now — it will not be shown again.</p>
       <div class="admin-banner__row">
-        <code id="admin-banner-value" class="admin-banner__value"></code>
+        <code id="admin-banner-value" class="admin-banner__value" tabindex="-1"></code>
         <button id="admin-banner-copy" class="btn btn--primary" type="button">Copy</button>
         <button id="admin-banner-dismiss" class="btn btn--ghost" type="button">Dismiss</button>
       </div>
