@@ -120,14 +120,19 @@ app.get('/admin.html', requireAuth, requireAdmin, (_req, res) => {
 });
 
 app.get('/api/admin/users', requireAuth, requireAdmin, (_req, res) => {
-  const users = listAccessKeys(KEYS_FILE).map(u => ({
-    name: u.name,
-    createdAt: u.createdAt,
-    expiresAt: u.expiresAt,
-    expired: u.expired,
-    hasSession: sessions.hasKeyName(u.name)
-  }));
-  res.json({ users });
+  try {
+    const users = listAccessKeys(KEYS_FILE).map(u => ({
+      name: u.name,
+      createdAt: u.createdAt,
+      expiresAt: u.expiresAt,
+      expired: u.expired,
+      hasSession: sessions.hasKeyName(u.name)
+    }));
+    res.json({ users });
+  } catch (err) {
+    console.error('admin: listAccessKeys failed:', err.message);
+    res.status(500).json({ error: 'Could not list keys.' });
+  }
 });
 
 app.post('/api/admin/users', requireAuth, requireAdmin, (req, res) => {
@@ -135,8 +140,12 @@ app.post('/api/admin/users', requireAuth, requireAdmin, (req, res) => {
   if (!name) return res.status(400).json({ error: 'name is required.' });
 
   let expiresAt = null;
-  if (req.body?.expiresInDays !== undefined && req.body?.expiresInDays !== null && req.body?.expiresInDays !== '') {
-    const days = Number(req.body.expiresInDays);
+  const rawDays = req.body?.expiresInDays;
+  if (rawDays !== undefined && rawDays !== null && rawDays !== '') {
+    if (typeof rawDays !== 'number' && typeof rawDays !== 'string') {
+      return res.status(400).json({ error: 'expiresInDays must be an integer between 1 and 365.' });
+    }
+    const days = Number(rawDays);
     if (!Number.isInteger(days) || days < 1 || days > 365) {
       return res.status(400).json({ error: 'expiresInDays must be an integer between 1 and 365.' });
     }
