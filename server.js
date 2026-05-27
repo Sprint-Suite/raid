@@ -208,7 +208,10 @@ app.post('/api/logout', requireAuth, (req, res) => {
 });
 
 app.get('/api/me', requireAuth, (req, res) => {
-  res.status(200).json({ name: req.session.keyName });
+  res.status(200).json({
+    name: req.session.keyName,
+    isAdmin: isAdmin(req.session.keyName, process.env)
+  });
 });
 
 app.post('/extract', requireAuth, async (req, res) => {

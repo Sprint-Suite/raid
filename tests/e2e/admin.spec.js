@@ -72,8 +72,8 @@ test('admin can rotate a user; old key fails, new key works', async ({ page, con
   const { value: oldValue } = await addRes.json();
 
   await page.goto('/admin.html');
-  page.once('dialog', d => d.accept());
   await page.locator('#admin-users-body tr[data-name="bob"] button:has-text("Rotate")').click();
+  await page.locator('#admin-confirm-ok').click();
 
   const rotateBanner = page.locator('#admin-banner-value');
   await expect(rotateBanner).not.toBeEmpty();
@@ -103,8 +103,8 @@ test('admin can delete a user; active session is killed immediately', async ({ p
 
   // Admin deletes carol.
   await page.goto('/admin.html');
-  page.once('dialog', d => d.accept());
   await page.locator('#admin-users-body tr[data-name="carol"] button:has-text("Delete")').click();
+  await page.locator('#admin-confirm-ok').click();
   await expect(page.locator('#admin-users-body tr[data-name="carol"]')).toHaveCount(0);
 
   // Carol's next request is unauthenticated.

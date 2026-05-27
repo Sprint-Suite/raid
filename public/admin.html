@@ -19,7 +19,7 @@
     <h1 class="admin-header__title">RAID admin</h1>
     <div class="admin-header__meta">
       <span id="admin-whoami" class="admin-header__whoami"></span>
-      <a href="/" class="admin-header__link">Back to app</a>
+      <a href="/" class="btn btn--ghost">Back to app</a>
       <button id="admin-logout" class="btn btn--ghost" type="button">Sign out</button>
     </div>
   </header>
@@ -69,6 +69,22 @@
     </section>
 
   </main>
+
+  <div id="admin-confirm-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title">
+    <div class="modal-content">
+      <h2 id="admin-confirm-title">Confirm</h2>
+      <p id="admin-confirm-body"></p>
+      <div class="modal-actions">
+        <button id="admin-confirm-cancel" class="btn btn--ghost" type="button">Cancel</button>
+        <button id="admin-confirm-ok" class="btn btn--primary" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>Part of the suite: <a href="https://sprintpoker.uk">sprintpoker</a> · <a href="https://sprintretro.uk">sprintretro</a> · <a href="https://signal.uk">signal</a></p>
+    <p><small>Built with Claude. <a href="/license.html">License</a></small></p>
+  </footer>
 
 </body>
 </html>

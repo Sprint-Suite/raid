@@ -193,6 +193,13 @@
   font: 400 12.5px/1.5 var(--sans);
 }
 
+.app-footer__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
 .app-footer a { color: var(--accent); }
 
 .app-footer a:focus-visible {

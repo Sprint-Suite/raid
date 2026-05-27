@@ -146,8 +146,49 @@
     }
   }
 
+  function confirmModal({ title, body, confirmLabel = 'Confirm' }) {
+    const overlay = $('admin-confirm-modal');
+    const titleEl = $('admin-confirm-title');
+    const bodyEl = $('admin-confirm-body');
+    const okBtn = $('admin-confirm-ok');
+    const cancelBtn = $('admin-confirm-cancel');
+
+    titleEl.textContent = title;
+    bodyEl.textContent = body;
+    okBtn.textContent = confirmLabel;
+    overlay.classList.remove('hidden');
+    okBtn.focus();
+
+    return new Promise((resolve) => {
+      function cleanup(result) {
+        overlay.classList.add('hidden');
+        okBtn.removeEventListener('click', onOk);
+        cancelBtn.removeEventListener('click', onCancel);
+        overlay.removeEventListener('click', onBackdrop);
+        document.removeEventListener('keydown', onKey);
+        resolve(result);
+      }
+      function onOk() { cleanup(true); }
+      function onCancel() { cleanup(false); }
+      function onBackdrop(e) { if (e.target === overlay) cleanup(false); }
+      function onKey(e) {
+        if (e.key === 'Escape') cleanup(false);
+        else if (e.key === 'Enter') cleanup(true);
+      }
+      okBtn.addEventListener('click', onOk);
+      cancelBtn.addEventListener('click', onCancel);
+      overlay.addEventListener('click', onBackdrop);
+      document.addEventListener('keydown', onKey);
+    });
+  }
+
   async function onRotate(name) {
-    if (!window.confirm(`Rotate key for "${name}"? Any current session will be signed out.`)) return;
+    const ok = await confirmModal({
+      title: `Rotate key for "${name}"?`,
+      body: 'Any current session for this user will be signed out immediately. A new key will be generated.',
+      confirmLabel: 'Rotate'
+    });
+    if (!ok) return;
     try {
       const { value } = await request(`/api/admin/users/${encodeURIComponent(name)}/rotate`, { method: 'POST' });
       showBanner(name, value);
@@ -159,7 +200,12 @@
   }
 
   async function onDelete(name) {
-    if (!window.confirm(`Delete user "${name}"? This signs them out immediately and removes their key.`)) return;
+    const ok = await confirmModal({
+      title: `Delete user "${name}"?`,
+      body: 'Their key is removed and any active session is signed out immediately.',
+      confirmLabel: 'Delete'
+    });
+    if (!ok) return;
     try {
       await request(`/api/admin/users/${encodeURIComponent(name)}`, { method: 'DELETE' });
       hideBanner();

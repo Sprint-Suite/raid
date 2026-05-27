@@ -408,7 +408,19 @@
     const logoutBtn = $('#logout-button');
     if (logoutBtn) logoutBtn.addEventListener('click', onLogout);
 
+    revealAdminLinkIfAdmin();
     render();
+  }
+
+  async function revealAdminLinkIfAdmin() {
+    const link = $('#admin-link');
+    if (!link) return;
+    try {
+      const res = await fetch('/api/me');
+      if (!res.ok) return;
+      const me = await res.json();
+      if (me.isAdmin) link.hidden = false;
+    } catch (_err) { /* non-fatal */ }
   }
 
   document.addEventListener('DOMContentLoaded', init);
