@@ -1,0 +1,63 @@
+/* public/css/admin.css — admin page layout. Theme tokens come from theme-core/theme-raid. */
+
+.admin-body {
+  margin: 0;
+  font-family: var(--font-body, system-ui, sans-serif);
+  background: var(--color-bg, #fff);
+  color: var(--color-text, #111);
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--color-border, #ddd);
+}
+
+.admin-header__title { margin: 0; font-size: 1.25rem; }
+.admin-header__meta { display: flex; gap: 1rem; align-items: center; }
+.admin-header__whoami { color: var(--color-muted, #666); font-size: 0.9rem; }
+.admin-header__link { color: var(--color-link, #0a58ca); text-decoration: none; }
+
+.admin-main {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admin-card {
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--color-surface, #fafafa);
+}
+
+.admin-card__title { margin-top: 0; font-size: 1.1rem; }
+
+.admin-form { display: grid; grid-template-columns: max-content 1fr; gap: 0.75rem 1rem; align-items: center; }
+.admin-form button[type="submit"] { grid-column: 1 / -1; justify-self: start; }
+
+.admin-status { min-height: 1.25rem; margin: 0 0 0.75rem; color: var(--color-muted, #666); font-size: 0.9rem; }
+.admin-status[data-tone="error"] { color: #b32424; }
+
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th, .admin-table td { padding: 0.6rem 0.5rem; text-align: left; border-bottom: 1px solid var(--color-border, #eee); }
+.admin-table__actions { text-align: right; }
+.admin-table__empty { color: var(--color-muted, #666); padding: 1rem; text-align: center; }
+.admin-table tr[data-expired="true"] td { opacity: 0.55; }
+
+.admin-table__row-actions { display: inline-flex; gap: 0.5rem; }
+
+.admin-banner {
+  border: 2px solid var(--color-accent, #d4a017);
+  background: #fff8e1;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+}
+.admin-banner__title { margin: 0 0 0.25rem; font-size: 1rem; }
+.admin-banner__hint  { margin: 0 0 0.75rem; color: var(--color-muted, #666); font-size: 0.85rem; }
+.admin-banner__row   { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.admin-banner__value { font-family: ui-monospace, monospace; padding: 0.4rem 0.6rem; background: #fff; border: 1px solid #ddd; border-radius: 0.25rem; word-break: break-all; }
