@@ -115,7 +115,7 @@ app.post('/api/login', (req, res) => {
 // ---------------------------------------------------------------------------
 app.get('/', requireAuth, (_req, res) => res.sendFile(path.join(publicDir, 'index.html')));
 
-app.get('/admin.html', requireAuth, requireAdmin, (_req, res) => {
+app.get(['/admin', '/admin.html'], requireAuth, requireAdmin, (_req, res) => {
   res.sendFile(path.join(publicDir, 'admin.html'));
 });
 
