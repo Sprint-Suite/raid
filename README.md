@@ -26,6 +26,18 @@ node manageKeys.js remove <name>     # revokes
 
 Keys are stored hashed in `keys.json` (gitignored). The plaintext value is shown once at generation time and never recoverable from the file. Sessions are in-memory only; restarting the server signs everyone out.
 
+## Admin web UI
+
+Set `RAID_ADMIN_KEY_NAME` to the name of an existing key (created via `manageKeys.js generate`). That user can then visit `/admin.html` to add, rotate, and remove other users from the browser. Without `RAID_ADMIN_KEY_NAME` set, the admin surface returns 404 — no UI, no API.
+
+```bash
+node manageKeys.js generate david   # save the key value somewhere
+RAID_ADMIN_KEY_NAME=david ANTHROPIC_API_KEY=sk-ant-... npm start
+# sign in as "david", then open http://localhost:3003/admin.html
+```
+
+You cannot delete or rotate the admin key from the web UI (footgun guard). Use `manageKeys.js` for that.
+
 ## Test
 
 ```bash
@@ -36,14 +48,15 @@ npm run test:harness   # live API, ~$0.05/run, manual gate
 
 ## Configuration
 
-| Env var | Default | Required |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | none | yes |
-| `RAID_MODEL` | `claude-sonnet-4-5` | no |
-| `PORT` | `3003` | no |
-| `RAID_KEYS_FILE` | `./keys.json` | no |
-| `RAID_SESSION_TTL_MS` | `604_800_000` (7d) | no |
-| `NODE_ENV` | unset | set to `production` in prod so cookies are `Secure` |
+| Env var | Default | Required | Notes |
+|---|---|---|---|
+| `ANTHROPIC_API_KEY` | none | yes | |
+| `RAID_MODEL` | `claude-sonnet-4-5` | no | |
+| `PORT` | `3003` | no | |
+| `RAID_KEYS_FILE` | `./keys.json` | no | |
+| `RAID_SESSION_TTL_MS` | `604_800_000` (7d) | no | |
+| `NODE_ENV` | unset | no | set to `production` in prod so cookies are `Secure` |
+| `RAID_ADMIN_KEY_NAME` | unset | no | Name of the key that gets access to `/admin.html`. Unset = admin UI disabled. |
 
 ## Docs
 
