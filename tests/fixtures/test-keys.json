@@ -4,5 +4,11 @@
     "salt": "3220cc1ad8d098e4a284e887b4360864",
     "active": true,
     "createdAt": "2026-05-26T00:00:00.000Z"
+  },
+  "guest": {
+    "hash": "6e6473fd03130974f9837b3ad3aec888f5becf68d490a2ac1695218bf76de89f",
+    "salt": "e7ef14860a7ee7b16772085de9768c71",
+    "active": true,
+    "createdAt": "2026-05-26T00:00:00.000Z"
   }
 }
