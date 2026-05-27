@@ -78,3 +78,24 @@ test('size reflects active sessions', () => {
   s.destroy(b);
   assert.equal(s.size, 0);
 });
+
+test('destroyByKeyName: deletes every session for the named key', () => {
+  const s = createSessionStore();
+  const a1 = s.start({ keyName: 'alice' });
+  const a2 = s.start({ keyName: 'alice' });
+  const b1 = s.start({ keyName: 'bob' });
+
+  s.destroyByKeyName('alice');
+
+  assert.equal(s.get(a1), null);
+  assert.equal(s.get(a2), null);
+  assert.ok(s.get(b1), "bob's session should be untouched");
+  assert.equal(s.size, 1);
+});
+
+test('destroyByKeyName: no-op when no session matches', () => {
+  const s = createSessionStore();
+  s.start({ keyName: 'alice' });
+  assert.doesNotThrow(() => s.destroyByKeyName('nobody'));
+  assert.equal(s.size, 1);
+});
