@@ -177,6 +177,6 @@ test('listAccessKeys: surfaces expiresAt and an expired flag', () => {
   assert.equal(byName.past.expired, true);
   assert.equal(byName.future.expired, false);
   assert.equal(byName.never.expired, false);
-  assert.equal(byName.past.expiresAt, byName.past.expiresAt);   // number
+  assert.equal(typeof byName.past.expiresAt, 'number');
   assert.equal(byName.never.expiresAt, null);
 });
