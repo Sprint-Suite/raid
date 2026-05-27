@@ -134,3 +134,49 @@ test('hashAccessKey: same salt+value → same hash; different salt → different
   assert.equal(h1, h2);
   assert.notEqual(h1, h3);
 });
+
+test('createAccessKey: persists expiresAt when supplied', () => {
+  const file = tempKeysFile();
+  const expiresAt = Date.now() + 86_400_000;
+  createAccessKey(file, 'alice', { expiresAt });
+
+  const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
+  assert.equal(raw.alice.expiresAt, expiresAt);
+});
+
+test('createAccessKey: omits expiresAt when not supplied', () => {
+  const file = tempKeysFile();
+  createAccessKey(file, 'alice');
+  const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
+  assert.equal('expiresAt' in raw.alice, false);
+});
+
+test('verifyAccessKey: rejects an expired key as if inactive', () => {
+  const file = tempKeysFile();
+  const { value } = createAccessKey(file, 'bob', { expiresAt: Date.now() - 1000 });
+  const result = verifyAccessKey(file, value);
+  assert.equal(result.ok, false);
+});
+
+test('verifyAccessKey: accepts a key whose expiresAt is in the future', () => {
+  const file = tempKeysFile();
+  const { value } = createAccessKey(file, 'carol', { expiresAt: Date.now() + 60_000 });
+  const result = verifyAccessKey(file, value);
+  assert.equal(result.ok, true);
+  assert.equal(result.name, 'carol');
+});
+
+test('listAccessKeys: surfaces expiresAt and an expired flag', () => {
+  const file = tempKeysFile();
+  createAccessKey(file, 'past', { expiresAt: Date.now() - 1 });
+  createAccessKey(file, 'future', { expiresAt: Date.now() + 60_000 });
+  createAccessKey(file, 'never');
+
+  const list = listAccessKeys(file);
+  const byName = Object.fromEntries(list.map(k => [k.name, k]));
+  assert.equal(byName.past.expired, true);
+  assert.equal(byName.future.expired, false);
+  assert.equal(byName.never.expired, false);
+  assert.equal(byName.past.expiresAt, byName.past.expiresAt);   // number
+  assert.equal(byName.never.expiresAt, null);
+});
