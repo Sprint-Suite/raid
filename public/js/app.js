@@ -323,8 +323,8 @@
       return { ok: false, error: "Couldn't reach the server. Check your connection and try again." };
     }
     if (res.status === 401) {
-      // Session expired or lost — back to the login page.
-      window.location.href = '/login.html';
+      // Session expired or lost — reload so requireAuth bounces us to the hub.
+      window.location.reload();
       return { ok: false, error: 'Signed out — redirecting.' };
     }
     if (res.status === 502) return { ok: false, error: 'Extraction failed. Try rephrasing or shortening your notes.' };
@@ -378,14 +378,10 @@
     render();
   }
 
-  async function onLogout() {
-    try {
-      await fetch('/api/logout', { method: 'POST' });
-    } catch (_err) {
-      // Best-effort; the cookie will be cleared by the server response when it succeeds.
-      // If the network failed, we still redirect — local session is effectively gone.
-    }
-    window.location.href = '/login.html';
+  function onLogout() {
+    // Hub-delegated logout: the auth-client handler revokes the central
+    // session, clears the local cookie, and redirects to the hub.
+    window.location.href = '/auth/logout';
   }
 
   // ---------- Init ----------
@@ -408,19 +404,7 @@
     const logoutBtn = $('#logout-button');
     if (logoutBtn) logoutBtn.addEventListener('click', onLogout);
 
-    revealAdminLinkIfAdmin();
     render();
-  }
-
-  async function revealAdminLinkIfAdmin() {
-    const link = $('#admin-link');
-    if (!link) return;
-    try {
-      const res = await fetch('/api/me');
-      if (!res.ok) return;
-      const me = await res.json();
-      if (me.isAdmin) link.hidden = false;
-    } catch (_err) { /* non-fatal */ }
   }
 
   document.addEventListener('DOMContentLoaded', init);

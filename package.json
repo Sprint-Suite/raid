@@ -11,7 +11,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "cookie-parser": "^1.4.7",
+    "@suite/auth-client": "file:../suite/shared/auth-client",
     "express": "^5.1.0"
   },
   "devDependencies": {

@@ -7,3 +7,8 @@ playwright-report/
 *.log
 .DS_Store
 keys.json
+
+# auth-client local session store
+data/*.db
+data/*.db-shm
+data/*.db-wal
