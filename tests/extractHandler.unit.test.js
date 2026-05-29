@@ -60,6 +60,19 @@ test('on ok, calls extract and returns 200 with remaining threaded through', asy
   assert.deepEqual(res.body.risks, [{ title: 'r' }]);
 });
 
+test('unlimited grant (remaining null) still returns 200 and calls extract', async () => {
+  let extracted = false;
+  const handler = createExtractHandler(deps({
+    extract: async () => { extracted = true; return { risks: [] }; },
+    auth: { consume: async () => ({ ok: true, remaining: null }) },
+  }));
+  const res = mockRes();
+  await handler(VALID_REQ(), res);
+  assert.equal(res.statusCode, 200);
+  assert.equal(extracted, true);
+  assert.equal(res.body.remaining, null);
+});
+
 test('quota_exceeded returns 402 and never calls extract', async () => {
   let extracted = false;
   const handler = createExtractHandler(deps({
