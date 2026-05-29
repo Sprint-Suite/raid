@@ -234,6 +234,14 @@
   to { transform: rotate(360deg); }
 }
 
+/* ---------- Quota note ---------- */
+
+.quota-note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 var(--s-4);
+}
+
 /* ---------- Result grid ---------- */
 
 .result-grid {
