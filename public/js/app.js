@@ -14,6 +14,7 @@
     phase: 'idle',
     currentSample: 0,
     result: null,
+    remaining: null,
     error: null
   };
 
@@ -302,7 +303,8 @@
           <p>Analysing your notes…</p>
         </div>`;
     } else if (state.phase === 'result') {
-      dom.resultZone.innerHTML = renderGrid(state.result) + renderActionBar();
+      dom.resultZone.innerHTML =
+        window.RaidExtractUi.renderNote(state.remaining) + renderGrid(state.result) + renderActionBar();
       wireActionBar();
     } else if (state.phase === 'error') {
       dom.resultZone.innerHTML = renderErrorCard();
@@ -322,15 +324,12 @@
     } catch (_networkErr) {
       return { ok: false, error: "Couldn't reach the server. Check your connection and try again." };
     }
-    if (res.status === 401) {
-      // Session expired or lost — reload so requireAuth bounces us to the hub.
-      window.location.reload();
-      return { ok: false, error: 'Signed out — redirecting.' };
+    const mapped = window.RaidExtractUi.messageFor(res.status);
+    if (mapped) {
+      if (mapped.reload) window.location.reload(); // requireAuth bounce on 401
+      return { ok: false, error: mapped.error };
     }
-    if (res.status === 502) return { ok: false, error: 'Extraction failed. Try rephrasing or shortening your notes.' };
-    if (res.status === 400) return { ok: false, error: 'The AI service rejected the request. This is likely a temporary configuration issue. Please try again.' };
-    if (res.status === 429) return { ok: false, error: 'Too many requests. Please wait a moment and try again.' };
-    if (!res.ok)             return { ok: false, error: 'Extraction failed. Try rephrasing or shortening your notes.' };
+    if (!res.ok) return { ok: false, error: 'Extraction failed. Try rephrasing or shortening your notes.' };
     const data = await res.json();
     return { ok: true, data };
   }
@@ -367,6 +366,7 @@
     if (result.ok) {
       state.phase = 'result';
       state.result = result.data;
+      state.remaining = result.data.remaining; // number, or undefined/null when unlimited
     } else {
       state.phase = 'error';
       state.error = result.error;
