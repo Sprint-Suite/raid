@@ -10,6 +10,7 @@ const express = require('express');
 const path = require('node:path');
 const { createAuthClient } = require('@suite/auth-client');
 const { extract } = require('./lib/extract.js');
+const { createExtractHandler } = require('./lib/extractHandler.js');
 const { getBuildInfo } = require('./lib/buildInfo.js');
 
 const PORT = process.env.PORT || 3003;
@@ -61,21 +62,7 @@ app.get('/build',        (_req, res) => res.json(BUILD));
 // ---------------------------------------------------------------------------
 app.get('/', auth.requireAuth, (_req, res) => res.sendFile(path.join(publicDir, 'index.html')));
 
-app.post('/extract', auth.requireAuth, async (req, res) => {
-  const text = req.body?.text;
-  if (typeof text !== 'string' || text.trim().length < 10) {
-    return res.status(400).json({ error: "Provide 'text' (at least 10 chars) of project notes." });
-  }
-  if (!API_KEY) {
-    return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set on the server.' });
-  }
-  try {
-    const raid = await extract(text, { apiKey: API_KEY, model: MODEL });
-    res.json(raid);
-  } catch (err) {
-    console.error('extract failed twice:', err.message);
-    res.status(502).json({ error: 'Extraction failed. Try rephrasing the notes and resubmit.' });
-  }
-});
+app.post('/extract', auth.requireAuth,
+  createExtractHandler({ auth, extract, apiKey: API_KEY, model: MODEL }));
 
 app.listen(PORT, () => console.log(`RAID listening on :${PORT} (model ${MODEL})`));
