@@ -126,7 +126,7 @@
 .ins .raid-card--conflict{border:2px solid var(--rag-red);}
 .ins .raid-card__corner-chip{position:absolute; top:-11px; right:14px; background:var(--rag-red); color:var(--rag-red-on); font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:4px 10px; border-radius:var(--r-pill);}
 .ins .raid-item__conflict-pill{font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:3px 8px; border-radius:var(--r-pill); background:var(--rag-red); color:var(--rag-red-on);}
-.ins .raid-item__conflict-callout{background:oklch(0.95 0.04 25); border-left:3px solid var(--rag-red); padding:var(--s-2) var(--s-3); border-radius:0 var(--r-md) var(--r-md) 0; font:400 12.5px/1.5 var(--sans); color:var(--ink); margin-top:var(--s-2);}
+.ins .raid-item__conflict-callout{background:var(--err-bg); border-left:3px solid var(--rag-red); padding:var(--s-2) var(--s-3); border-radius:0 var(--r-md) var(--r-md) 0; font:400 12.5px/1.5 var(--sans); color:var(--ink); margin-top:var(--s-2);}
 .ins .raid-item__conflict-callout strong{color:var(--rag-red); font-weight:700;}
 
 /* Action / export bar */
