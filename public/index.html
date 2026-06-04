@@ -6,33 +6,33 @@
   <title>RAID — From scattered notes to a scored RAID log</title>
   <meta name="description" content="Turn project notes into a scored, classified RAID log: Risks, Assumptions, Issues, Dependencies — with dependency conflict detection.">
 
-  <link rel="stylesheet" href="/css/theme-core.css">
-  <link rel="stylesheet" href="/css/theme-raid.css">
-  <link rel="stylesheet" href="/css/app.css">
-  <link rel="stylesheet" href="/css/breathing-waves.css">
+  <link rel="stylesheet" href="/css/instrument-core.css">
+  <link rel="stylesheet" href="/css/raid.css">
 
   <script src="/js/clipboard.js" defer></script>
   <script src="/js/samples.js" defer></script>
   <script src="/js/exports.js" defer></script>
-  <script src="/js/breathing-waves.js" defer></script>
   <script src="/js/extractUi.js" defer></script>
   <script src="/js/app.js" defer></script>
+  <script type="module" src="/js/oscilloscope.js"></script>
   <script src="/auth-client/heartbeat.js" defer></script>
 </head>
-<body>
+<body class="ins" data-app="raid">
 
-  <header class="header-band" data-breathing-waves data-wave-palette="raid">
-    <canvas></canvas>
+  <header class="topbar">
+    <a class="brand" href="/"><svg class="mk" width="22" height="22" aria-hidden="true"><use href="/illos/glyphs.svg#glyph-raid"/></svg> <span>RAID</span></a>
+    <span class="tbacts">
+      <button id="logout-button" class="btn btn--ghost" type="button">Sign out</button>
+    </span>
   </header>
 
-  <main class="app-page">
+  <div class="band"><div class="waves"></div><div class="band-in">
+    <div class="eyebrow">RAID extraction</div>
+    <h1>RAID</h1>
+    <p class="sub">From scattered notes to a scored RAID log, in seconds.</p>
+  </div></div>
 
-    <header class="hero">
-      <svg class="hero__glyph" aria-hidden="true"><use href="/illos/theme-illos.svg#sticker-circle"/></svg>
-      <span class="hero__kicker">RAID extraction</span>
-      <h1 class="hero__title">RAID</h1>
-      <p class="hero__tagline">From scattered notes to a scored RAID log, in seconds.</p>
-    </header>
+  <main class="app-page">
 
     <section class="input-card" aria-labelledby="input-heading">
       <h2 id="input-heading" class="visually-hidden">Project notes</h2>
@@ -62,26 +62,9 @@
   </main>
 
   <footer class="app-footer">
-    <p class="app-footer__actions">
-      <button id="logout-button" class="btn btn--ghost" type="button">Sign out</button>
-    </p>
     <p>Part of the suite: <a href="https://sprintpoker.uk">sprintpoker</a> · <a href="https://sprintretro.uk">sprintretro</a> · <a href="https://signal.uk">signal</a></p>
     <p><small>Built with Claude. <a href="/license.html">License</a></small></p>
   </footer>
-
-  <style>
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-  </style>
 
 </body>
 </html>
