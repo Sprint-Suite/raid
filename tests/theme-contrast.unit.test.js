@@ -11,13 +11,13 @@ const C = {
   panel:     "#fdfeff", // --panel     oklch(0.996 0.002 240)
   ink:       "#1a1f24", // --ink       oklch(0.235 0.013 250)
   soft:      "#52575d", // --soft      oklch(0.455 0.012 250)
-  faint:     "#7c8186", // --faint     oklch(0.6   0.01  250)
   accentBtn: "#dbab5e", // --accent-btn oklch(0.77 0.11  78)  — amber primary button
   ragRed:    "#cc272e", // --rag-red    oklch(0.55 0.20  25)
   ragAmber:  "#f5ae39", // --rag-amber  oklch(0.80 0.15  75)
   ragAmberOn:"#3e2104", // --rag-amber-on oklch(0.28 0.06 60)
   ragGreen:  "#007938", // --rag-green  oklch(0.50 0.14 152)
   white:     "#ffffff",
+  errBg:     "#ffe5e1", // --err-bg oklch(0.95 0.04 25)
 };
 
 // All RAG/severity pills are 10.5px bold — NOT "large text" (≥18px or ≥14px bold).
@@ -27,10 +27,11 @@ const BODY = [
   ["ink",       "panel"],       // body copy on card surface
   ["soft",      "panel"],       // muted copy on card surface
   ["soft",      "bone"],        // muted copy on background
-  ["ink",       "accentBtn"],   // INK label on the amber primary button (white ~3:1 would FAIL)
+  ["ink",       "accentBtn"],   // INK label on the amber primary button (white ~2.1:1 would FAIL)
   ["white",     "ragRed"],      // vivid red pill label
   ["ragAmberOn","ragAmber"],    // dark label on vivid amber pill
   ["white",     "ragGreen"],    // vivid green pill label
+  ["ragRed",    "errBg"],      // vivid-red conflict-callout text on pale-red bg
 ];
 
 for (const [fg, bg] of BODY) {
