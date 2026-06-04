@@ -16,12 +16,14 @@
   <script src="/js/app.js" defer></script>
   <script type="module" src="/js/oscilloscope.js"></script>
   <script src="/auth-client/heartbeat.js" defer></script>
+  <script src="/auth-client/suite-return.js" defer></script>
 </head>
 <body class="ins" data-app="raid">
 
   <header class="topbar">
     <a class="brand" href="/"><svg class="mk" width="22" height="22" aria-hidden="true"><use href="/illos/glyphs.svg#glyph-raid"/></svg> <span>RAID</span></a>
     <span class="tbacts">
+      <a class="btn btn-ghost btn-sm" data-suite-return hidden>Return to Suite</a>
       <button id="logout-button" class="btn btn-ghost btn-sm" type="button">Sign out</button>
     </span>
   </header>
