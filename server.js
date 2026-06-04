@@ -37,6 +37,7 @@ app.set('trust proxy', true); // for req.ip behind a reverse proxy
 app.use('/auth-client', auth.staticAssets);
 app.get('/auth/launch', auth.handleLaunch);
 app.get('/auth/logout', auth.handleLogout);
+app.get('/auth/whoami', auth.handleWhoami);
 app.post('/api/heartbeat', auth.handleHeartbeat);
 
 // ---------------------------------------------------------------------------
