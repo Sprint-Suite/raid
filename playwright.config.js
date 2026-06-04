@@ -12,7 +12,7 @@ module.exports = defineConfig({
     trace: 'retain-on-failure'
   },
   webServer: {
-    command: 'PORT=3003 ANTHROPIC_API_KEY=dummy-for-e2e RAID_KEYS_FILE=tests/fixtures/test-keys.json RAID_ADMIN_KEY_NAME=e2e node server.js',
+    command: 'PORT=3003 ANTHROPIC_API_KEY=dummy-for-e2e HUB_BASE_URL=http://127.0.0.1:9 HUB_API_KEY=dummy APP_SESSIONS_DB=/tmp/raid-e2e-sessions.db node server.js',
     url: 'http://localhost:3003/health',
     reuseExistingServer: !process.env.CI,
     timeout: 10_000

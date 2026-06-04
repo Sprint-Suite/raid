@@ -1,0 +1,153 @@
+/* raid.css — Raid-owned layer over instrument-core.css.
+   Holds everything Instrument doesn't provide, re-pointed to Instrument tokens.
+   Loaded AFTER instrument-core.css. NOT part of the synced foundation. */
+
+.ins{
+  /* Spacing + radii + shadows Instrument doesn't define (from theme-core) */
+  --s-2:8px; --s-3:12px; --s-4:16px; --s-6:24px; --s-8:32px; --s-12:48px;
+  --r-sm:6px; --r-md:8px; --r-lg:12px; --r-pill:999px;
+  --shadow-sm:0 1px 0 rgba(42,31,18,0.04);
+  --shadow-md:0 1px 0 rgba(42,31,18,0.04), 0 8px 24px rgba(42,31,18,0.06);
+
+  /* Typography stacks */
+  --sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+
+  /* Amber accent text/tints. NOTE: --amber is LIGHT — white text on it FAILS
+     AA (~3:1). Text on amber is INK; the primary button uses --accent-btn. */
+  --accent-deep:oklch(0.46 0.10 66);          /* deep amber for text/links on light bg */
+  --accent-soft:oklch(0.70 0.125 72 / 0.16);  /* translucent amber (focus ring / chip) */
+  --accent-btn:oklch(0.77 0.11 78);           /* lighter amber so the INK label clears AA */
+
+  /* VIVID RAG triad — Raid is intentionally louder than the suite (scannability).
+     Values tunable in the visual pass; keep tests/theme-contrast green. */
+  --rag-red:oklch(0.55 0.20 25);    --rag-red-on:#fff;
+  --rag-amber:oklch(0.80 0.15 75);  --rag-amber-on:oklch(0.28 0.06 60);
+  --rag-green:oklch(0.50 0.14 152); --rag-green-on:#fff;
+
+  /* Calm semantic aliases — CATEGORY identity pills + the error panel only */
+  --warn:oklch(0.5 0.12 60); --warn-bg:var(--amberwash);
+  --err:oklch(0.5 0.15 25);  --err-bg:oklch(0.95 0.04 25);
+  --info:var(--teal); --info-bg:var(--tealwash);
+}
+
+/* The HTML [hidden] attr must always win (result-zone idle phase). */
+[hidden]{display:none !important;}
+
+/* visually-hidden utility (moved out of index.html's inline <style>) */
+.ins .visually-hidden{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+
+/* App shell */
+.ins .app-page{max-width:920px; margin:0 auto; padding:var(--s-8) var(--s-6);}
+
+/* Buttons — restyle Raid's OWN BEM modifiers; base .btn geometry is the
+   foundation's (6px radius). Primary = amber w/ INK label (white fails AA). */
+.ins .btn:focus-visible{outline:none; box-shadow:0 0 0 3px var(--accent-soft), 0 0 0 1px var(--accent);}
+.ins .btn--primary{background:var(--accent-btn); color:var(--ink); border-color:var(--accent-btn);}
+.ins .btn--primary:hover:not(:disabled){filter:brightness(1.04); transform:translateY(-1px); box-shadow:var(--shadow-md);}
+.ins .btn--primary:disabled{background:var(--bone); color:var(--faint); border-color:var(--line2); cursor:not-allowed; box-shadow:none; transform:none;}
+.ins .btn--secondary{background:var(--bone); color:var(--ink); border-color:var(--line2);}
+.ins .btn--secondary:hover:not(:disabled){border-color:var(--accent); color:var(--accent-deep);}
+.ins .btn--ghost{background:var(--panel); color:var(--ink); border-color:var(--line2);}
+.ins .btn--ghost:hover:not(:disabled){border-color:var(--accent); color:var(--accent-deep);}
+
+/* Privacy chip (translucent amber — NOT a *wash) */
+.ins .privacy-chip{display:inline-flex; align-items:center; gap:6px; background:var(--accent-soft); color:var(--accent-deep); font:500 12.5px/1 var(--sans); padding:6px 12px; border-radius:var(--r-pill); margin-bottom:var(--s-3);}
+.ins .privacy-chip__icon{width:14px; height:14px;}
+
+/* Input card */
+.ins .input-card{background:var(--panel); border:1px solid var(--line2); border-radius:var(--r-lg); box-shadow:var(--shadow-md); padding:var(--s-6); margin-bottom:var(--s-8);}
+.ins .input-card__textarea{width:100%; min-height:220px; font:400 14.5px/1.55 var(--sans); color:var(--ink); background:var(--bone); border:1px solid var(--line2); border-radius:var(--r-md); padding:12px 14px; resize:vertical; box-sizing:border-box;}
+.ins .input-card__textarea:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);}
+.ins .input-card__counter{font:400 12.5px/1 var(--sans); color:var(--soft); text-align:right; margin-top:var(--s-2);}
+.ins .input-card__counter--warn{color:var(--warn);}
+.ins .input-card__counter--err{color:var(--err);}
+.ins .input-card__helper{font:400 12.5px/1.4 var(--sans); color:var(--err); margin-top:var(--s-2); min-height:1.4em;}
+.ins .input-card__helper--hidden{visibility:hidden;}
+.ins .input-card__actions{margin-top:var(--s-4); display:flex; justify-content:flex-end;}
+
+/* Footer (suite links + license link; Sign out moved to the topbar) */
+.ins .app-footer{text-align:center; padding:var(--s-12) var(--s-6) var(--s-8); color:var(--soft); font:400 12.5px/1.5 var(--sans);}
+.ins .app-footer a{color:var(--accent-deep);}
+.ins .app-footer a:focus-visible{outline:none; box-shadow:0 0 0 3px var(--accent-soft); border-radius:var(--r-sm);}
+
+/* Result zone + loading + quota note */
+.ins .result-zone{margin-top:var(--s-6);}
+.ins .loading{text-align:center; padding:var(--s-12) var(--s-4); color:var(--soft);}
+.ins .spinner{width:40px; height:40px; margin:0 auto var(--s-3); border:3px solid var(--accent-soft); border-top-color:var(--accent); border-radius:50%; animation:raid-spin 1s linear infinite;}
+@keyframes raid-spin{to{transform:rotate(360deg);}}
+.ins .quota-note{font-size:0.85rem; color:var(--soft); margin:0 0 var(--s-4);}
+
+/* ── Part B: result grid, RAID cards, vivid RAG, action/error/license ── */
+
+/* Result grid */
+.ins .result-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4); margin-top:var(--s-4);}
+@media (max-width:640px){.ins .result-grid{grid-template-columns:1fr;}}
+
+/* RAID card */
+.ins .raid-card{position:relative; background:var(--panel); border:1px solid var(--line2); border-radius:var(--r-lg); padding:var(--s-6); box-shadow:var(--shadow-sm);}
+.ins .raid-card__header{display:flex; align-items:center; gap:var(--s-2); margin-bottom:var(--s-4);}
+.ins .raid-card__pill{font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:4px 10px; border-radius:var(--r-pill);}
+/* CATEGORY identity pills stay CALM (washes) */
+.ins .raid-card__pill--risks{background:var(--err-bg); color:var(--err);}
+.ins .raid-card__pill--assumptions{background:var(--info-bg); color:var(--info);}
+.ins .raid-card__pill--issues{background:var(--warn-bg); color:var(--warn);}
+.ins .raid-card__pill--dependencies{background:var(--accent-soft); color:var(--accent-deep);}
+.ins .raid-card__count{font:600 13px/1 var(--sans); color:var(--soft);}
+.ins .raid-card__empty{font:400 13px/1.4 var(--sans); color:var(--soft); font-style:italic;}
+
+/* RAID item */
+.ins .raid-item{padding:var(--s-3) 0; border-bottom:1px solid var(--bone);}
+.ins .raid-item:last-child{border-bottom:none;}
+.ins .raid-item__title{font:600 14.5px/1.35 var(--sans); color:var(--ink); margin:0 0 var(--s-2);}
+.ins .raid-item__meta{display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:var(--s-2);}
+.ins .raid-item__owner{font:500 11.5px/1 var(--sans); color:var(--soft); background:var(--bone); padding:3px 8px; border-radius:var(--r-pill);}
+.ins .raid-item__score{font:500 12.5px/1 var(--sans); color:var(--soft);}
+.ins .raid-item__body{font:400 13.5px/1.5 var(--sans); color:var(--ink); margin:0;}
+.ins .raid-item__body + .raid-item__body{margin-top:var(--s-2);}
+.ins .raid-item__label{font-weight:600; color:var(--accent-deep);}
+
+/* RAG + severity pills — VIVID (saturated, filled). The scannable status layer. */
+.ins .raid-item__rag, .ins .raid-item__sev-label{font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:3px 8px; border-radius:var(--r-pill);}
+.ins .raid-item__rag--red,    .ins .raid-item__sev-label--high  {background:var(--rag-red);   color:var(--rag-red-on);}
+.ins .raid-item__rag--amber,  .ins .raid-item__sev-label--medium{background:var(--rag-amber); color:var(--rag-amber-on);}
+.ins .raid-item__rag--green,  .ins .raid-item__sev-label--low   {background:var(--rag-green); color:var(--rag-green-on);}
+
+/* Conflict treatment — VIVID RED (was amber). The hero feature of Dependencies. */
+.ins .raid-card--conflict{border:2px solid var(--rag-red);}
+.ins .raid-card__corner-chip{position:absolute; top:-11px; right:14px; background:var(--rag-red); color:var(--rag-red-on); font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:4px 10px; border-radius:var(--r-pill);}
+.ins .raid-item__conflict-pill{font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:3px 8px; border-radius:var(--r-pill); background:var(--rag-red); color:var(--rag-red-on);}
+.ins .raid-item__conflict-callout{background:var(--err-bg); border-left:3px solid var(--rag-red); padding:var(--s-2) var(--s-3); border-radius:0 var(--r-md) var(--r-md) 0; font:400 12.5px/1.5 var(--sans); color:var(--ink); margin-top:var(--s-2);}
+.ins .raid-item__conflict-callout strong{color:var(--rag-red); font-weight:700;}
+
+/* Action / export bar */
+.ins .action-bar{display:flex; gap:var(--s-2); flex-wrap:wrap; margin-top:var(--s-6);}
+@media (max-width:640px){.ins .action-bar{flex-direction:column;} .ins .action-bar .btn{width:100%;}}
+
+/* Error card (calm red panel — vivid would be too loud full-bleed) */
+.ins .error-card{background:var(--err-bg); border:1px solid var(--err); border-radius:var(--r-lg); padding:var(--s-6); text-align:center;}
+.ins .error-card__icon{width:32px; height:32px; margin:0 auto var(--s-3); color:var(--err);}
+.ins .error-card__message{font:400 14.5px/1.5 var(--sans); color:var(--err); margin:0 0 var(--s-4);}
+.ins .error-card__actions{display:flex; justify-content:center;}
+
+/* License page */
+.ins .license-wrap{max-width:900px; margin:var(--s-8) auto; background:var(--panel); border:1px solid var(--line2); border-radius:var(--r-lg); box-shadow:var(--shadow-md); padding:var(--s-6);}
+.ins .license-wrap p{margin:0 0 var(--s-3); color:var(--ink); line-height:1.6; font:400 14.5px/1.6 var(--sans);}
+.ins .license-wrap a{color:var(--accent-deep); text-decoration:underline; text-underline-offset:2px;}
+.ins .license-wrap a:hover{color:var(--accent);}
+.ins .license-wrap pre{margin-top:var(--s-4); background:var(--bone); border:1px solid var(--line2); border-radius:var(--r-md); padding:var(--s-4); white-space:pre-wrap; word-break:break-word; color:var(--ink); line-height:1.5; font:400 13px/1.55 var(--mono);}
+@media (max-width:640px){.ins .license-wrap{margin:var(--s-4); padding:var(--s-4);}}
+
+/* Reduced motion */
+@media (prefers-reduced-motion:reduce){
+  .ins *{transition:none !important;}
+  .ins .btn--primary:hover:not(:disabled){transform:none;}
+  .ins .spinner{animation:none; border-top-color:var(--accent-soft);}
+}
+
+/* Mobile */
+@media (max-width:640px){
+  .ins .app-page{padding:var(--s-6) var(--s-4);}
+  .ins .input-card{padding:var(--s-4);}
+  .ins .input-card__actions .btn{width:100%;}
+}
