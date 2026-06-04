@@ -86,3 +86,77 @@
 .ins .spinner{width:40px; height:40px; margin:0 auto var(--s-3); border:3px solid var(--accent-soft); border-top-color:var(--accent); border-radius:50%; animation:raid-spin 1s linear infinite;}
 @keyframes raid-spin{to{transform:rotate(360deg);}}
 .ins .quota-note{font-size:0.85rem; color:var(--soft); margin:0 0 var(--s-4);}
+
+/* ── Part B: result grid, RAID cards, vivid RAG, action/error/license ── */
+
+/* Result grid */
+.ins .result-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4); margin-top:var(--s-4);}
+@media (max-width:640px){.ins .result-grid{grid-template-columns:1fr;}}
+
+/* RAID card */
+.ins .raid-card{position:relative; background:var(--panel); border:1px solid var(--line2); border-radius:var(--r-lg); padding:var(--s-6); box-shadow:var(--shadow-sm);}
+.ins .raid-card__header{display:flex; align-items:center; gap:var(--s-2); margin-bottom:var(--s-4);}
+.ins .raid-card__pill{font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:4px 10px; border-radius:var(--r-pill);}
+/* CATEGORY identity pills stay CALM (washes) */
+.ins .raid-card__pill--risks{background:var(--err-bg); color:var(--err);}
+.ins .raid-card__pill--assumptions{background:var(--info-bg); color:var(--info);}
+.ins .raid-card__pill--issues{background:var(--warn-bg); color:var(--warn);}
+.ins .raid-card__pill--dependencies{background:var(--accent-soft); color:var(--accent-deep);}
+.ins .raid-card__count{font:600 13px/1 var(--sans); color:var(--soft);}
+.ins .raid-card__empty{font:400 13px/1.4 var(--sans); color:var(--soft); font-style:italic;}
+
+/* RAID item */
+.ins .raid-item{padding:var(--s-3) 0; border-bottom:1px solid var(--bone);}
+.ins .raid-item:last-child{border-bottom:none;}
+.ins .raid-item__title{font:600 14.5px/1.35 var(--sans); color:var(--ink); margin:0 0 var(--s-2);}
+.ins .raid-item__meta{display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:var(--s-2);}
+.ins .raid-item__owner{font:500 11.5px/1 var(--sans); color:var(--soft); background:var(--bone); padding:3px 8px; border-radius:var(--r-pill);}
+.ins .raid-item__score{font:500 12.5px/1 var(--sans); color:var(--soft);}
+.ins .raid-item__body{font:400 13.5px/1.5 var(--sans); color:var(--ink); margin:0;}
+.ins .raid-item__body + .raid-item__body{margin-top:var(--s-2);}
+.ins .raid-item__label{font-weight:600; color:var(--accent-deep);}
+
+/* RAG + severity pills — VIVID (saturated, filled). The scannable status layer. */
+.ins .raid-item__rag, .ins .raid-item__sev-label{font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:3px 8px; border-radius:var(--r-pill);}
+.ins .raid-item__rag--red,    .ins .raid-item__sev-label--high  {background:var(--rag-red);   color:var(--rag-red-on);}
+.ins .raid-item__rag--amber,  .ins .raid-item__sev-label--medium{background:var(--rag-amber); color:var(--rag-amber-on);}
+.ins .raid-item__rag--green,  .ins .raid-item__sev-label--low   {background:var(--rag-green); color:var(--rag-green-on);}
+
+/* Conflict treatment — VIVID RED (was amber). The hero feature of Dependencies. */
+.ins .raid-card--conflict{border:2px solid var(--rag-red);}
+.ins .raid-card__corner-chip{position:absolute; top:-11px; right:14px; background:var(--rag-red); color:var(--rag-red-on); font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:4px 10px; border-radius:var(--r-pill);}
+.ins .raid-item__conflict-pill{font:700 10.5px/1 var(--sans); text-transform:uppercase; letter-spacing:0.04em; padding:3px 8px; border-radius:var(--r-pill); background:var(--rag-red); color:var(--rag-red-on);}
+.ins .raid-item__conflict-callout{background:oklch(0.95 0.04 25); border-left:3px solid var(--rag-red); padding:var(--s-2) var(--s-3); border-radius:0 var(--r-md) var(--r-md) 0; font:400 12.5px/1.5 var(--sans); color:var(--ink); margin-top:var(--s-2);}
+.ins .raid-item__conflict-callout strong{color:var(--rag-red); font-weight:700;}
+
+/* Action / export bar */
+.ins .action-bar{display:flex; gap:var(--s-2); flex-wrap:wrap; margin-top:var(--s-6);}
+@media (max-width:640px){.ins .action-bar{flex-direction:column;} .ins .action-bar .btn{width:100%;}}
+
+/* Error card (calm red panel — vivid would be too loud full-bleed) */
+.ins .error-card{background:var(--err-bg); border:1px solid var(--err); border-radius:var(--r-lg); padding:var(--s-6); text-align:center;}
+.ins .error-card__icon{width:32px; height:32px; margin:0 auto var(--s-3); color:var(--err);}
+.ins .error-card__message{font:400 14.5px/1.5 var(--sans); color:var(--err); margin:0 0 var(--s-4);}
+.ins .error-card__actions{display:flex; justify-content:center;}
+
+/* License page */
+.ins .license-wrap{max-width:900px; margin:var(--s-8) auto; background:var(--panel); border:1px solid var(--line2); border-radius:var(--r-lg); box-shadow:var(--shadow-md); padding:var(--s-6);}
+.ins .license-wrap p{margin:0 0 var(--s-3); color:var(--ink); line-height:1.6; font:400 14.5px/1.6 var(--sans);}
+.ins .license-wrap a{color:var(--accent-deep); text-decoration:underline; text-underline-offset:2px;}
+.ins .license-wrap a:hover{color:var(--accent);}
+.ins .license-wrap pre{margin-top:var(--s-4); background:var(--bone); border:1px solid var(--line2); border-radius:var(--r-md); padding:var(--s-4); white-space:pre-wrap; word-break:break-word; color:var(--ink); line-height:1.5; font:400 13px/1.55 var(--mono);}
+@media (max-width:640px){.ins .license-wrap{margin:var(--s-4); padding:var(--s-4);}}
+
+/* Reduced motion */
+@media (prefers-reduced-motion:reduce){
+  .ins *{transition:none !important;}
+  .ins .btn--primary:hover:not(:disabled){transform:none;}
+  .ins .spinner{animation:none; border-top-color:var(--accent-soft);}
+}
+
+/* Mobile */
+@media (max-width:640px){
+  .ins .app-page{padding:var(--s-6) var(--s-4);}
+  .ins .input-card{padding:var(--s-4);}
+  .ins .input-card__actions .btn{width:100%;}
+}
