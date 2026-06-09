@@ -12,6 +12,9 @@ const { createAuthClient } = require('@suite/auth-client');
 const { extract } = require('./lib/extract.js');
 const { createExtractHandler } = require('./lib/extractHandler.js');
 const { getBuildInfo } = require('./lib/buildInfo.js');
+const { logger } = require('./lib/logger.js');
+const { makeRequestLogger } = require('./middleware/requestLogger.js');
+const { makeErrorHandler } = require('./middleware/errorHandler.js');
 
 const PORT = process.env.PORT || 3003;
 const API_KEY = process.env.ANTHROPIC_API_KEY;
@@ -28,6 +31,7 @@ const auth = createAuthClient({
 });
 
 const app = express();
+app.use(makeRequestLogger(logger));
 app.use(express.json({ limit: '1mb' }));
 app.set('trust proxy', true); // for req.ip behind a reverse proxy
 
@@ -66,4 +70,6 @@ app.get('/', auth.requireAuth, (_req, res) => res.sendFile(path.join(publicDir, 
 app.post('/extract', auth.requireAuth,
   createExtractHandler({ auth, extract, apiKey: API_KEY, model: MODEL }));
 
-app.listen(PORT, () => console.log(`RAID listening on :${PORT} (model ${MODEL})`));
+app.use(makeErrorHandler({ logger, nodeEnv: process.env.NODE_ENV }));
+
+app.listen(PORT, () => logger.info({ port: Number(PORT), model: MODEL }, 'raid listening'));
