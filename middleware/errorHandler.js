@@ -26,14 +26,15 @@ function makeErrorHandler({ logger, nodeEnv }) {
   const isProd = nodeEnv === "production";
   return function errorHandler(err, req, res, next) {
     const log = req.log || logger;
-    const reqId = req.id;
+    const reqId = req.id ?? "n/a";
     if (res.headersSent) {
       log.warn({ err, reqId }, "error after headers sent");
       return next(err);
     }
     log.error({ err, reqId }, "unhandled error");
 
-    const status = Number.isInteger(err.status) && err.status >= 400 && err.status < 600 ? err.status : 500;
+    const raw = err.status ?? err.statusCode;
+    const status = Number.isInteger(raw) && raw >= 400 && raw < 600 ? raw : 500;
     res.status(status);
 
     const wantsJson =

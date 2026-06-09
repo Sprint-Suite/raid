@@ -81,3 +81,12 @@ test("dev mode HTML error exposes the stack", async () => {
   assert.match(res.headers["content-type"], /html/);
   assert.ok(res.text.includes("kaboom-secret-detail"));
 });
+
+test("HTML error has a usable reference when no requestLogger is mounted", async () => {
+  const sink = new Writable({ write(_c, _e, cb) { cb(); } });
+  const app = express();
+  app.get("/boom", () => { throw new Error("x"); });
+  app.use(makeErrorHandler({ logger: createLogger({ stream: sink }), nodeEnv: "production" }));
+  const res = await request(app).get("/boom");
+  assert.ok(!res.text.includes("undefined"), 'Reference should not render as "undefined"');
+});
