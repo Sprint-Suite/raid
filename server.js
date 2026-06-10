@@ -15,6 +15,7 @@ const { getBuildInfo } = require('./lib/buildInfo.js');
 const { logger } = require('./lib/logger.js');
 const { makeRequestLogger } = require('./middleware/requestLogger.js');
 const { makeErrorHandler } = require('./middleware/errorHandler.js');
+const { makeSecurityHeaders } = require('./middleware/securityHeaders.js');
 
 const PORT = process.env.PORT || 3003;
 const API_KEY = process.env.ANTHROPIC_API_KEY;
@@ -34,6 +35,7 @@ const app = express();
 app.use(makeRequestLogger(logger));
 app.use(express.json({ limit: '1mb' }));
 app.set('trust proxy', true); // for req.ip behind a reverse proxy
+app.use(makeSecurityHeaders());
 
 // ---------------------------------------------------------------------------
 // Auth hub integration (launch / logout / heartbeat + browser heartbeat asset)
