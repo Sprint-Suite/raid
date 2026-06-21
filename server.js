@@ -32,6 +32,7 @@ const auth = createAuthClient({
 });
 
 const app = express();
+app.disable('x-powered-by');
 app.use(makeRequestLogger(logger));
 app.use(express.json({ limit: '1mb' }));
 app.set('trust proxy', true); // for req.ip behind a reverse proxy

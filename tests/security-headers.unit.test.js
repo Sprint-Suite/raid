@@ -2,14 +2,20 @@
 "use strict";
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
+const path = require("node:path");
 const express = require("express");
 const request = require("supertest");
 const { makeSecurityHeaders, DEFAULT_CSP } = require("../middleware/securityHeaders.js");
 
 function makeApp() {
   const app = express();
+  app.disable("x-powered-by"); // mirror server.js hardening
   app.use(makeSecurityHeaders());
   app.get("/ping", (_req, res) => res.json({ ok: true }));
+  // mirror the real robots.txt route from server.js (served via sendFile)
+  app.get("/robots.txt", (_req, res) =>
+    res.sendFile(path.join(__dirname, "../public/robots.txt"))
+  );
   return app;
 }
 
@@ -79,6 +85,21 @@ test("makeSecurityHeaders: custom CSP override is used", () => {
   const next = () => {};
   msh({ contentSecurityPolicy: customCsp })({}, res, next);
   assert.equal(headers["Content-Security-Policy"], customCsp);
+});
+
+test("X-Powered-By header is not exposed", async () => {
+  const res = await request(makeApp()).get("/ping");
+  assert.equal(
+    res.headers["x-powered-by"],
+    undefined,
+    `x-powered-by should be absent, got: ${res.headers["x-powered-by"]}`
+  );
+});
+
+test("GET /robots.txt returns 200", async () => {
+  const res = await request(makeApp()).get("/robots.txt");
+  assert.equal(res.status, 200, `expected 200, got ${res.status}`);
+  assert.match(res.text, /User-agent: \*/, "robots.txt should contain a User-agent line");
 });
 
 test("DEFAULT_CSP export contains all required directives", () => {
