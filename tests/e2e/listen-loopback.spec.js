@@ -16,22 +16,24 @@ function lanAddress() {
   return null;
 }
 
-function connects(host) {
+// Resolves "connected", the socket error code, or "timeout".
+function probe(host) {
   return new Promise((resolve) => {
     const socket = net.connect({ host, port: PORT });
     socket.setTimeout(2000);
-    socket.once('connect', () => { socket.destroy(); resolve(true); });
-    socket.once('error', () => resolve(false));
-    socket.once('timeout', () => { socket.destroy(); resolve(false); });
+    socket.once('connect', () => { socket.destroy(); resolve('connected'); });
+    socket.once('error', (e) => resolve(e.code));
+    socket.once('timeout', () => { socket.destroy(); resolve('timeout'); });
   });
 }
 
 test('the server accepts loopback connections', async () => {
-  expect(await connects('127.0.0.1')).toBe(true);
+  expect(await probe('127.0.0.1')).toBe('connected');
 });
 
 test('the server refuses connections on a non-loopback address', async () => {
   const lan = lanAddress();
   test.skip(!lan, 'no non-loopback IPv4 interface on this machine');
-  expect(await connects(lan)).toBe(false);
+  // ECONNREFUSED proves nothing listens there; a timeout would only prove a filter.
+  expect(await probe(lan)).toBe('ECONNREFUSED');
 });
