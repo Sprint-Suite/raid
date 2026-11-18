@@ -3,9 +3,13 @@
 // validation is done via inline safeParse in extractHandler.js.
 const { z } = require("zod");
 
-// text must be a non-empty string of at least 10 chars (after trim).
+// text must be at least 10 chars after trim, counted in UTF-16 units to match
+// the browser's text.length. zod >= 4.5 .min() counts code points instead.
 const extractSchema = z.object({
-  text: z.string().trim().min(10),
+  text: z
+    .string()
+    .trim()
+    .refine((t) => t.length >= 10),
 });
 
 module.exports = { extractSchema };

@@ -24,6 +24,13 @@ test("extractSchema: rejects text shorter than 10 chars", () => {
   assert.ok(!result.success, "short text should fail");
 });
 
+// The browser counts text.length (UTF-16 units); the server must agree, or
+// input the page accepts is refused. "Fix 🐛 bug" is 10 units but 9 code points.
+test("extractSchema: counts the minimum in UTF-16 units, as the browser does", () => {
+  assert.ok(extractSchema.safeParse({ text: "Fix 🐛 bug" }).success, "10 UTF-16 units should pass");
+  assert.ok(!extractSchema.safeParse({ text: "Fix 🐛 bu" }).success, "9 UTF-16 units should fail");
+});
+
 test("extractSchema: rejects text that is only whitespace (trims to empty)", () => {
   const result = extractSchema.safeParse({ text: "         " });
   assert.ok(!result.success, "whitespace-only text should fail after trim");
@@ -99,6 +106,13 @@ test("extractHandler: accepts trimmed text of exactly 10 chars", async () => {
   const res = mockRes();
   // "1234567890" = 10 chars; after trim still 10
   await handler({ centralSessionId: "s", body: { text: "1234567890" } }, res);
+  assert.equal(res.statusCode, 200);
+});
+
+test("extractHandler: accepts 10 UTF-16 units containing an emoji", async () => {
+  const handler = createExtractHandler(deps());
+  const res = mockRes();
+  await handler({ centralSessionId: "s", body: { text: "Fix 🐛 bug" } }, res);
   assert.equal(res.statusCode, 200);
 });
 
