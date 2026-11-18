@@ -35,7 +35,7 @@ const app = express();
 app.disable('x-powered-by');
 app.use(makeRequestLogger(logger));
 app.use(express.json({ limit: '1mb' }));
-app.set('trust proxy', true); // for req.ip behind a reverse proxy
+app.set('trust proxy', 'loopback'); // only the local Apache may set X-Forwarded-For
 app.use(makeSecurityHeaders());
 
 // ---------------------------------------------------------------------------
@@ -75,4 +75,4 @@ app.post('/extract', auth.requireAuth,
 
 app.use(makeErrorHandler({ logger, nodeEnv: process.env.NODE_ENV }));
 
-app.listen(PORT, () => logger.info({ port: Number(PORT), model: MODEL }, 'raid listening'));
+app.listen(PORT, '127.0.0.1', () => logger.info({ port: Number(PORT), model: MODEL }, 'raid listening'));

@@ -7,9 +7,9 @@
 // Free-text fields are intentionally NOT asserted (model wording varies).
 //
 // USAGE:
-//   ENDPOINT=http://localhost:3003/extract node tests/harness.test.js
+//   ENDPOINT=http://127.0.0.1:3003/extract node tests/harness.test.js
 
-const ENDPOINT = process.env.ENDPOINT || 'http://localhost:3003/extract';
+const ENDPOINT = process.env.ENDPOINT || 'http://127.0.0.1:3003/extract';
 
 const CASES = [
   {
