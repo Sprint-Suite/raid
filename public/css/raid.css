@@ -78,7 +78,7 @@
 @keyframes raid-spin{to{transform:rotate(360deg);}}
 .ins .quota-note{font-size:0.85rem; color:var(--soft); margin:0 0 var(--s-4);}
 
-/* ── Part B: result grid, RAID cards, vivid RAG, action/error/license ── */
+/* ── Part B: result grid, RAID cards, vivid RAG, action/error ── */
 
 /* Result grid */
 .ins .result-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4); margin-top:var(--s-4);}
@@ -129,14 +129,6 @@
 .ins .error-card__icon{width:32px; height:32px; margin:0 auto var(--s-3); color:var(--err);}
 .ins .error-card__message{font:400 14.5px/1.5 var(--sans); color:var(--err); margin:0 0 var(--s-4);}
 .ins .error-card__actions{display:flex; justify-content:center;}
-
-/* License page */
-.ins .license-wrap{max-width:900px; margin:var(--s-8) auto; background:var(--panel); border:1px solid var(--line2); border-radius:var(--r-lg); box-shadow:var(--shadow-md); padding:var(--s-6);}
-.ins .license-wrap p{margin:0 0 var(--s-3); color:var(--ink); line-height:1.6; font:400 14.5px/1.6 var(--sans);}
-.ins .license-wrap a{color:var(--accent-deep); text-decoration:underline; text-underline-offset:2px;}
-.ins .license-wrap a:hover{color:var(--accent);}
-.ins .license-wrap pre{margin-top:var(--s-4); background:var(--bone); border:1px solid var(--line2); border-radius:var(--r-md); padding:var(--s-4); white-space:pre-wrap; word-break:break-word; color:var(--ink); line-height:1.5; font:400 13px/1.55 var(--mono);}
-@media (max-width:640px){.ins .license-wrap{margin:var(--s-4); padding:var(--s-4);}}
 
 /* Reduced motion */
 @media (prefers-reduced-motion:reduce){
