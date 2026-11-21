@@ -60,7 +60,8 @@ app.use('/images', express.static(path.join(publicDir, 'images')));
 // ---------------------------------------------------------------------------
 // Public pages + API
 // ---------------------------------------------------------------------------
-app.get('/license.html', (_req, res) => res.sendFile(path.join(publicDir, 'license.html')));
+// The licence lives on the Hub; in-app it opens as a popup (js/licence-modal.js).
+app.get(['/license', '/licence', '/license.html'], (_req, res) => res.redirect(301, 'https://sprintsuite.uk/license'));
 app.get('/robots.txt',   (_req, res) => res.sendFile(path.join(publicDir, 'robots.txt')));
 app.get('/health',       (_req, res) => res.json({ ok: true, model: MODEL }));
 app.get('/build',        (_req, res) => res.json(BUILD));
